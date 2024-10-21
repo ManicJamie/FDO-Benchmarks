@@ -1,0 +1,14 @@
+[project]
+name = "FDO-Benchmarks"
+authors = [{name = "Jamie", email = "jamiebloomfield8@gmail.com"}]
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest",
+    
+]
+
+[project.optional-dependencies]
+impl = [
+    "flask"
+]

@@ -1,0 +1,5 @@
+.venv/
+**/generation/objects/
+**/__pycache__/
+
+.vscode/
