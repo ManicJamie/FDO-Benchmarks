@@ -1,6 +1,6 @@
-from dataclasses import dataclass
 from datetime import datetime, timedelta
 import random
+from typing import TypedDict
 
 # Aliases to help keep track of types for when I make this a little tidier
 CC = str
@@ -21,14 +21,12 @@ def random_delta() -> timedelta:
 def random_date() -> ISODate:
     return (datetime.now() - random_delta()).date().isoformat()
 
-@dataclass
-class Author():
+class Author(TypedDict):
     type: str
     id: str  # TODO: RefURI?
     name: str  # TODO: should probably be generic metadata
 
-@dataclass
-class Content():
+class Content(TypedDict):
     type: str
     id: RefPath
     """Permanent URL to this content's metadata (?)"""
@@ -38,8 +36,7 @@ class Content():
     contentUrl: RefPath
     """Permanent URL to the content datastream"""
 
-@dataclass
-class FDO():
+class FDO(TypedDict):
     """An internal structure holding data to generate all FDO implementations."""
     name: dict[CC, str]
     description: dict[CC, str]
@@ -49,32 +46,30 @@ class FDO():
     license: RefUri
     author: list[Author]
     distribution: list[Content]
-    
-    @classmethod
-    def generated(cls, i) -> 'FDO':
-        out = FDO(
-            name={"en": f"Test object {i}"},
-            description={"en": f"Test object {i}'s description"},
-            date_published=random_date(),
-            date_modified=random_date(),
-            is_free=bool(random.randint(0, 1)),
-            license=random.choice(LICENSES),
-            author=[
-                Author(
-                    type="Person",
-                    id="https://orcid.org/0000-0002-1825-0097",
-                    name="Josiah Carberry"
-                )
-            ],
-            distribution=[
-                Content(
-                    type="DataDownload",  # TODO: add other types
-                    id="",
-                    name=f"TestContent{i}_0",
-                    fileFormat="text/csv",  # TODO: add other types
-                    contentSize=0,  # TODO: based on size of block
-                    contentUrl=""
-                )
-            ]
-        )
-        return out
+
+def generated(i) -> FDO:
+    return {
+        "name": {"en": f"Test object {i}"},
+        "description": {"en": f"Test object {i}'s description"},
+        "date_published": random_date(),
+        "date_modified": random_date(),
+        "is_free": bool(random.randint(0, 1)),
+        "license": random.choice(LICENSES),
+        "author": [
+            {
+                "type": "Person",
+                "id": "https://orcid.org/0000-0002-1825-0097",
+                "name": "Josiah Carberry"
+            }
+        ],
+        "distribution": [
+            {
+                "type": "DataDownload",  # TODO: add other types
+                "id": "",
+                "name": f"TestContent{i}_0",
+                "fileFormat": "text/csv",  # TODO: add other types
+                "contentSize": 0,  # TODO: based on size of block
+                "contentUrl": ""
+            }
+        ]
+    }
